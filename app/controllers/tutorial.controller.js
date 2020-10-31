@@ -1,5 +1,6 @@
 const db = require("..");
 const Tutorial = db.tutorials;
+const Comment = db.comments;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Tutorial
@@ -32,27 +33,79 @@ exports.create = (req, res) => {
       });
   };
 
-// Retrieve all Tutorials from the database.
-exports.findAll = (req, res) => {
-    const title = req.query.title;
-    var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
-  
-    Tutorial.findAll({ where: condition })
-      .then(data => {
-        res.send(data);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while retrieving tutorials."
+
+  exports.createComment = (req, res) => {
+
+      // Validate request
+      if (!req.body.text) {
+        res.status(400).send({
+          message: "Content can not be empty!"
         });
+        return;
+      }
+    
+      // Create a Comment
+      const comment = {
+        name: req.body.name,
+        text: req.body.text,
+        tutorialId: req.body.tutorialId
+      };
+    
+    Comment.create(comment)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the Tutorial."
       });
+    });
   };
+
+
+  exports.findAll = (req,res) => {
+    Tutorial.findAll({
+      include: ["comments"],
+    }).then(data => {
+              res.send(data);
+            }).catch(err=>{
+              res.status(500).send({
+                message:
+               err.message || "Some error occurred while retrieving tutorials."
+              })
+            })
+   
+  
+  
+  };
+
+
+// Retrieve all Tutorials from the database.
+// exports.findAll = (req, res) => {
+//     const title = req.query.title;
+//     var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
+  
+//     Tutorial.findAll({ where: condition })
+//       .then(data => {
+//         res.send(data);
+//       })
+//       .catch(err => {
+//         res.status(500).send({
+//           message:
+//             err.message || "Some error occurred while retrieving tutorials."
+//         });
+//       });
+//   };
 // Find a single Tutorial with an id
-exports.findOne = (req, res) => {
+
+
+  exports.findOne = (req, res) => {
     const id = req.params.id;
   
-    Tutorial.findByPk(id)
+    Tutorial.findByPk(id,{
+      include: ["comments"]
+    })
       .then(data => {
         res.send(data);
       })
@@ -62,6 +115,23 @@ exports.findOne = (req, res) => {
         });
       });
   };
+
+
+
+  exports.findCommentById = (req, res) => {
+    const id = req.params.id;
+     Comment.findByPk(id, { include: ["tutorial"] })
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Error retrieving Comment with id=" + id
+        });
+      });
+  };
+  
+
 
 // Update a Tutorial by the id in the request
 exports.update = (req, res) => {
@@ -87,6 +157,31 @@ exports.update = (req, res) => {
         });
       });
   };
+
+  // Delete a Tutorial with the specified id in the request
+exports.deleteComment = (req, res) => {
+  const id = req.params.id;
+
+  Comment.destroy({
+    where: { id: id }
+  })
+    .then(num => {
+      if (num == 1) {
+        res.send({
+          message: "Comment was deleted successfully!"
+        });
+      } else {
+        res.send({
+          message: `Cannot delete Comment with id=${id}. Maybe comment was not found!`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Could not delete Tutorial with id=" + id
+      });
+    });
+};
 // Delete a Tutorial with the specified id in the request
 exports.delete = (req, res) => {
     const id = req.params.id;

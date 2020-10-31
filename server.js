@@ -1,3 +1,6 @@
+//Reference: https://bezkoder.com/node-js-express-sequelize-mysql/
+//Reference: https://bezkoder.com/sequelize-associate-one-to-many/
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -8,12 +11,14 @@ const db = require("./app/index");
 db.sequelize.sync().then(() => {
     
   });
+
+  //for renewed database eachtime
 // db.sequelize.sync({ force: true }).then(() => {
 //     console.log("Drop and re-sync db.");
 //   });
 
 var corsOptions = {
-  origin: "http://localhost:8081"
+  origin: "http://localhost:8081"//frontend
 };
 
 app.use(cors(corsOptions));
@@ -35,3 +40,4 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
+
