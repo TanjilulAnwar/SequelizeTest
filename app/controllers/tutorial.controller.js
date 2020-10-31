@@ -19,7 +19,8 @@ exports.create = (req, res) => {
       description: req.body.description,
       published: req.body.published ? req.body.published : false
     };
-  
+
+
     // Save Tutorial in the database
     Tutorial.create(tutorial)
       .then(data => {
@@ -147,7 +148,7 @@ exports.update = (req, res) => {
           });
         } else {
           res.send({
-            message: `Cannot update Tutorial with id=${id}. Maybe Tutorial was not found or req.body is empty!`
+            message: `Cannot update Tutorial with id=${id}. Maybe Tutorial was not found or req.body is empty !`
           });
         }
       })
@@ -163,7 +164,7 @@ exports.deleteComment = (req, res) => {
   const id = req.params.id;
 
   Comment.destroy({
-    where: { id: id }
+    where: { id: id },cascade:false
   })
     .then(num => {
       if (num == 1) {

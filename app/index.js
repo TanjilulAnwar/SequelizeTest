@@ -22,9 +22,11 @@ db.sequelize = sequelize;
 db.tutorials = require("./models/tutorial.model.js")(sequelize, Sequelize);
 db.comments = require("./models/comment.model.js")(sequelize, Sequelize);
 
-db.tutorials.hasMany(db.comments, { as: "comments" });
+db.tutorials.hasMany(db.comments, { as: "comments",onDelete: 'cascade',hooks: true, });
 db.comments.belongsTo(db.tutorials, {
+  onDelete: 'cascade',
   foreignKey: "tutorialId",
+  hooks: true,
   as: "tutorial",
 });
 
