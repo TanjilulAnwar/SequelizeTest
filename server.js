@@ -1,5 +1,6 @@
 //Reference: https://bezkoder.com/node-js-express-sequelize-mysql/
 //Reference: https://bezkoder.com/sequelize-associate-one-to-many/
+//Reference: https://bezkoder.com/sequelize-associate-many-to-many/
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -35,6 +36,8 @@ app.get("/", (req, res) => {
 });
 
 require("./app/routes/tutorial.routes")(app);
+require("./app/routes/tags.routes")(app);
+require("./app/routes/author.routes")(app);
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

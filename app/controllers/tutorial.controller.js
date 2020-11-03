@@ -4,6 +4,7 @@ const Comment = db.comments;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Tutorial
+//Active
 exports.create = (req, res) => {
     // Validate request
     if (!req.body.title) {
@@ -17,9 +18,9 @@ exports.create = (req, res) => {
     const tutorial = {
       title: req.body.title,
       description: req.body.description,
+      authorId:req.body.authorId,
       published: req.body.published ? req.body.published : false
     };
-
 
     // Save Tutorial in the database
     Tutorial.create(tutorial)
@@ -34,7 +35,7 @@ exports.create = (req, res) => {
       });
   };
 
-
+//Active
   exports.createComment = (req, res) => {
 
       // Validate request
@@ -45,7 +46,7 @@ exports.create = (req, res) => {
         return;
       }
     
-      // Create a Comment
+      // Create a Comment//Active
       const comment = {
         name: req.body.name,
         text: req.body.text,
@@ -64,10 +65,10 @@ exports.create = (req, res) => {
     });
   };
 
-
+//Active
   exports.findAll = (req,res) => {
     Tutorial.findAll({
-      include: ["comments"],
+      include: ["authors","comments","tags"],
     }).then(data => {
               res.send(data);
             }).catch(err=>{
@@ -105,7 +106,7 @@ exports.create = (req, res) => {
     const id = req.params.id;
   
     Tutorial.findByPk(id,{
-      include: ["comments"]
+      include: ["authors","comments","tags"]
     })
       .then(data => {
         res.send(data);

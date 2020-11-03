@@ -21,13 +21,34 @@ db.sequelize = sequelize;
 
 db.tutorials = require("./models/tutorial.model.js")(sequelize, Sequelize);
 db.comments = require("./models/comment.model.js")(sequelize, Sequelize);
-
+db.tag = require("./models/tag.model.js")(sequelize, Sequelize);
+db.authors = require("./models/author.model.js")(sequelize, Sequelize);
+db.authors.hasMany(db.tutorials, { as: "tutorials" });
+db.tutorials.belongsTo(db.authors, {
+  //onDelete: 'cascade',
+ // foreignKey: { allowNull: false },//<-------required for cascading delete
+ foreignKey: "authorId",
+ // hooks: true,
+  as: "authors",
+});
 db.tutorials.hasMany(db.comments, { as: "comments",onDelete: 'cascade',hooks: true, });
 db.comments.belongsTo(db.tutorials, {
   onDelete: 'cascade',
-  foreignKey: "tutorialId",
+  foreignKey: { allowNull: false },//<-------required for cascading delete
+ // foreignKey: "tutorialId",
   hooks: true,
   as: "tutorial",
+});
+
+db.tag.belongsToMany(db.tutorials, {
+  through: "tutorial_tag",
+  as: "tutorials",
+  foreignKey: "tag_id",
+});
+db.tutorials.belongsToMany(db.tag, {
+  through: "tutorial_tag",
+  as: "tags",
+  foreignKey: "tutorial_id",
 });
 
 module.exports = db;
