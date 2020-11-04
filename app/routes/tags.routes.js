@@ -1,10 +1,10 @@
 module.exports = app => {
     const tags = require("../controllers/tag.controller");
-  
+    const { authJwt } = require("../middleware");
     var router = require("express").Router();
   
     // Create a new Tutorial
-    router.post("/", tags.create);
+    router.post("/",[authJwt.verifyToken, authJwt.isAdmin], tags.create);
   
     // Retrieve all Tutorials
     router.get("/", tags.findAll);

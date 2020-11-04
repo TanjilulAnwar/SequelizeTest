@@ -8,7 +8,7 @@ verifyToken = (req, res, next) => {
 
   if (!token) {
     return res.status(403).send({
-      message: "No token provided!"
+      message: "You don't have permission for this!"
     });
   }
 
@@ -35,6 +35,25 @@ isAdmin = (req, res, next) => {
 
       res.status(403).send({
         message: "Require Admin Role!"
+      });
+      return;
+    });
+  });
+};
+
+
+isAuthor = (req, res, next) => {
+  User.findByPk(req.userId).then(user => {
+    user.getRoles().then(roles => {
+      for (let i = 0; i < roles.length; i++) {
+        if (roles[i].name === "author") {
+          next();
+          return;
+        }
+      }
+
+      res.status(403).send({
+        message: "Require Author Role!"
       });
       return;
     });
@@ -83,6 +102,7 @@ isModeratorOrAdmin = (req, res, next) => {
 const authJwt = {
   verifyToken: verifyToken,
   isAdmin: isAdmin,
+  isAuthor:isAuthor,
   isModerator: isModerator,
   isModeratorOrAdmin: isModeratorOrAdmin
 };

@@ -1,13 +1,13 @@
 module.exports = app => {
     const authors = require("../controllers/author.controller.js");
-  
+    const { authJwt } = require("../middleware");
     var router = require("express").Router();
   
     // Create a new Tutorial
-    router.post("/", authors.create);
+    router.post("/",[authJwt.verifyToken, authJwt.isAdmin], authors.create);
   
     // Retrieve all authors
-    router.get("/", authors.findAll);
+    router.get("/",[authJwt.verifyToken, authJwt.isAdmin], authors.findAll);
   
     // // Retrieve all published Tutorials
     // router.get("/published", tutorials.findAllPublished);

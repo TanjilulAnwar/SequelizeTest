@@ -22,16 +22,20 @@ db.sequelize.sync().then(() => {
       id: 1,
       name: "user"
     });
-   
     Role.create({
       id: 2,
       name: "moderator"
     });
-   
     Role.create({
       id: 3,
+      name: "author"
+    });
+   
+    Role.create({
+      id: 4,
       name: "admin"
     });
+
   }
 
 //for renewed database eachtime

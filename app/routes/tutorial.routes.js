@@ -1,16 +1,18 @@
 module.exports = app => {
     const tutorials = require("../controllers/tutorial.controller.js");
+    const { authJwt } = require("../middleware");
+
   
     var router = require("express").Router();
   
     // Create a new Tutorial
-    router.post("/", tutorials.create);
+    router.post("/",[authJwt.verifyToken, authJwt.isAdmin,authJwt.isAuthor], tutorials.create);
   
     // Retrieve all Tutorials
     router.get("/", tutorials.findAll);
   
     // Retrieve all published Tutorials
-    router.get("/published", tutorials.findAllPublished);
+    router.get("/published",[authJwt.verifyToken, authJwt.isAdmin], tutorials.findAllPublished);
 
     // create a comment under tutorials
     router.post("/comments/", tutorials.createComment);
@@ -25,13 +27,13 @@ module.exports = app => {
     router.put("/:id", tutorials.update);
   
     // Delete a Tutorial with id
-    router.delete("/:id", tutorials.delete);
+    router.delete("/:id",[authJwt.verifyToken, authJwt.isAuthor], tutorials.delete);
 
     // Delete a Comment with id
     router.delete("/comments/:id", tutorials.deleteComment);
   
     // Delete all Tutorials
-    router.delete("/", tutorials.deleteAll);
+    router.delete("/",[authJwt.verifyToken, authJwt.isAdmin], tutorials.deleteAll);
   
     app.use('/api/tutorials', router);
   };
