@@ -1,0 +1,20 @@
+{	
+  "username": "Tanjilul Anwar",
+  "email": "tanjilanwar@gmail.com",
+  "password": "vEngA@59%#",
+  "roles":["admin","user"]
+}
+
+{	
+  "username": "Sigal Chick",
+  "email": "sigalchick@gmail.com",
+  "password": "jiRaBo%2@",
+  "roles":["author","user"]
+}
+
+{	
+  "username": "Ben Dover",
+  "email": "bendover@gmail.com",
+  "password": "SiKl#@44i",
+  "roles":["user"]
+}
