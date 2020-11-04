@@ -1,7 +1,9 @@
-const dbConfig = require("../config/db.config.js");
-
+const dbConfig = require("./config/db.config.js");
 const Sequelize = require("sequelize");
-const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
+const sequelize = new Sequelize(
+  dbConfig.DB, 
+  dbConfig.USER, 
+  dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   dialect: dbConfig.dialect,
   operatorsAliases: false,
@@ -14,6 +16,8 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   }
 });
 
+
+
 const db = {};
 
 db.Sequelize = Sequelize;
@@ -23,6 +27,24 @@ db.tutorials = require("./models/tutorial.model.js")(sequelize, Sequelize);
 db.comments = require("./models/comment.model.js")(sequelize, Sequelize);
 db.tag = require("./models/tag.model.js")(sequelize, Sequelize);
 db.authors = require("./models/author.model.js")(sequelize, Sequelize);
+db.user = require("./models/user.model.js")(sequelize, Sequelize);
+db.role = require("./models/role.model.js")(sequelize, Sequelize);
+
+db.role.belongsToMany(db.user, {
+  through: "user_roles",
+  foreignKey: "roleId",
+  otherKey: "userId"
+});
+db.user.belongsToMany(db.role, {
+  through: "user_roles",
+  foreignKey: "userId",
+  otherKey: "roleId"
+});
+
+db.ROLES = ["user", "admin", "moderator"];
+
+
+
 db.authors.hasMany(db.tutorials, { as: "tutorials" });
 db.tutorials.belongsTo(db.authors, {
   //onDelete: 'cascade',
@@ -31,6 +53,7 @@ db.tutorials.belongsTo(db.authors, {
  // hooks: true,
   as: "authors",
 });
+
 db.tutorials.hasMany(db.comments, { as: "comments",onDelete: 'cascade',hooks: true, });
 db.comments.belongsTo(db.tutorials, {
   onDelete: 'cascade',

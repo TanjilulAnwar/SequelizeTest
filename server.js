@@ -1,6 +1,8 @@
 //Reference: https://bezkoder.com/node-js-express-sequelize-mysql/
 //Reference: https://bezkoder.com/sequelize-associate-one-to-many/
 //Reference: https://bezkoder.com/sequelize-associate-many-to-many/
+//Reference: https://github.com/bezkoder/node-js-jwt-auth
+//Reference: https://bezkoder.com/node-js-jwt-authentication-mysql/
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -9,11 +11,30 @@ const cors = require("cors");
 const app = express();
 
 const db = require("./app/index");
+const Role = db.role;
 db.sequelize.sync().then(() => {
-    
+  //initial();
   });
 
-  //for renewed database eachtime
+
+  function initial() {
+    Role.create({
+      id: 1,
+      name: "user"
+    });
+   
+    Role.create({
+      id: 2,
+      name: "moderator"
+    });
+   
+    Role.create({
+      id: 3,
+      name: "admin"
+    });
+  }
+
+//for renewed database eachtime
 // db.sequelize.sync({ force: true }).then(() => {
 //     console.log("Drop and re-sync db.");
 //   });
@@ -38,6 +59,9 @@ app.get("/", (req, res) => {
 require("./app/routes/tutorial.routes")(app);
 require("./app/routes/tags.routes")(app);
 require("./app/routes/author.routes")(app);
+require('./app/routes/auth.routes')(app);
+require('./app/routes/user.routes')(app);
+
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
