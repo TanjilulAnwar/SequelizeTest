@@ -18,3 +18,9 @@
   "password": "SiKl#@44i",
   "roles":["user"]
 }
+
+if author can 
+	then 
+	   admin can 
+but if admin can 
+        the author can't always can

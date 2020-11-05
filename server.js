@@ -30,7 +30,6 @@ db.sequelize.sync().then(() => {
       id: 3,
       name: "author"
     });
-   
     Role.create({
       id: 4,
       name: "admin"

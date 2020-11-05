@@ -8,7 +8,7 @@ verifyToken = (req, res, next) => {
 
   if (!token) {
     return res.status(403).send({
-      message: "You don't have permission for this!"
+      message: "Please Sign in to continue!"
     });
   }
 
@@ -41,12 +41,17 @@ isAdmin = (req, res, next) => {
   });
 };
 
-
+//if author can then admin but if admin can the auhtor can't always can
 isAuthor = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     user.getRoles().then(roles => {
       for (let i = 0; i < roles.length; i++) {
         if (roles[i].name === "author") {
+          next();
+          return;
+        }
+
+        if (roles[i].name === "admin") {
           next();
           return;
         }

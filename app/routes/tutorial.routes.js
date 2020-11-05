@@ -1,4 +1,5 @@
 module.exports = app => {
+  
     const tutorials = require("../controllers/tutorial.controller.js");
     const { authJwt } = require("../middleware");
 
@@ -6,7 +7,7 @@ module.exports = app => {
     var router = require("express").Router();
   
     // Create a new Tutorial
-    router.post("/",[authJwt.verifyToken, authJwt.isAdmin,authJwt.isAuthor], tutorials.create);
+    router.post("/",[authJwt.verifyToken, authJwt.isAuthor], tutorials.create);
   
     // Retrieve all Tutorials
     router.get("/", tutorials.findAll);
@@ -24,7 +25,7 @@ module.exports = app => {
     router.get("/:id", tutorials.findOne);
   
     // Update a Tutorial with id
-    router.put("/:id", tutorials.update);
+    router.put("/:id",[authJwt.verifyToken, authJwt.isAuthor], tutorials.update);
   
     // Delete a Tutorial with id
     router.delete("/:id",[authJwt.verifyToken, authJwt.isAuthor], tutorials.delete);
