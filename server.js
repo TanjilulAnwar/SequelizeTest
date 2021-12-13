@@ -7,43 +7,41 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-
 const app = express();
 
 const db = require("./app/index");
 const Role = db.role;
+
 db.sequelize.sync().then(() => {
-  //initial();
+  // initial();
+});
+
+function initial() {
+  Role.create({
+    id: 1,
+    name: "user",
   });
+  Role.create({
+    id: 2,
+    name: "moderator",
+  });
+  Role.create({
+    id: 3,
+    name: "author",
+  });
+  Role.create({
+    id: 4,
+    name: "admin",
+  });
+}
 
-
-  function initial() {
-    Role.create({
-      id: 1,
-      name: "user"
-    });
-    Role.create({
-      id: 2,
-      name: "moderator"
-    });
-    Role.create({
-      id: 3,
-      name: "author"
-    });
-    Role.create({
-      id: 4,
-      name: "admin"
-    });
-
-  }
-
-//for renewed database eachtime
+// for renewed database eachtime
 // db.sequelize.sync({ force: true }).then(() => {
-//     console.log("Drop and re-sync db.");
-//   });
+//   console.log("Drop and re-sync db.");
+// });
 
 var corsOptions = {
-  origin: "http://localhost:8081"//frontend
+  origin: "http://localhost:8081", //frontend
 };
 
 app.use(cors(corsOptions));
@@ -62,12 +60,11 @@ app.get("/", (req, res) => {
 require("./app/routes/tutorial.routes")(app);
 require("./app/routes/tags.routes")(app);
 require("./app/routes/author.routes")(app);
-require('./app/routes/auth.routes')(app);
-require('./app/routes/user.routes')(app);
+require("./app/routes/auth.routes")(app);
+require("./app/routes/user.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
-
